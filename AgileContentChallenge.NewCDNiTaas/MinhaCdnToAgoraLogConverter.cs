@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 
 namespace AgileContentChallenge.NewCDNiTaas
 {
     public static class MinhaCdnToAgoraLogConverter
     {
-        public static AgoraLog ConvertLog(string url)
+        public static AgoraLog ConvertLog(string url, string outputFile)
         {
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -18,6 +20,10 @@ namespace AgileContentChallenge.NewCDNiTaas
             else if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
                 throw new UriFormatException(url);
+            }
+            else if (string.IsNullOrWhiteSpace(outputFile))
+            {
+                throw new ArgumentNullException("output file");
             }
 
             using (WebClient webClient = new WebClient())
@@ -28,7 +34,7 @@ namespace AgileContentChallenge.NewCDNiTaas
 
                     if (minhaCdnLog.Count() == 0)
                     {
-                        throw new NullReferenceException("Invalid download file!");
+                        throw new NullReferenceException("Invalid download file.");
                     }
 
                     var logLines = new List<AgoraLogLine>();
@@ -48,7 +54,19 @@ namespace AgileContentChallenge.NewCDNiTaas
                                 log[2].ToUpper().Equals("INVALIDATE") ? "REFRESH_HIT" : log[2]));
                     }
 
-                    return new AgoraLog(logLines);
+                    if (!Directory.Exists(Path.GetDirectoryName(outputFile)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
+                    }
+
+                    AgoraLog agoraLog = new AgoraLog(logLines);
+
+                    StreamWriter file = new StreamWriter(outputFile, true, Encoding.UTF8);
+                    file.WriteLine(agoraLog.ToString());
+                    file.Flush();
+                    file.Close();
+
+                    return agoraLog;
                 }
                 catch (Exception e)
                 {
