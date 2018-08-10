@@ -11,6 +11,9 @@ namespace AgileContentChallenge.NewCDNiTaas
         public string Provider { get; protected set; }
         public IList<AgoraLogLine> Lines { get; protected set; }
 
+        public AgoraLog()
+        { }
+
         public AgoraLog(IList<AgoraLogLine> lines)
         {
             if ((lines == null) || (lines.Count() == 0))

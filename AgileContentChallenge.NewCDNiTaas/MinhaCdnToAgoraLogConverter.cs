@@ -34,7 +34,7 @@ namespace AgileContentChallenge.NewCDNiTaas
 
                     if (minhaCdnLog.Count() == 0)
                     {
-                        throw new NullReferenceException("Invalid download file.");
+                        throw new ArgumentException("Invalid download file.");
                     }
 
                     var logLines = new List<AgoraLogLine>();
@@ -42,7 +42,18 @@ namespace AgileContentChallenge.NewCDNiTaas
                     foreach (string line in minhaCdnLog)
                     {
                         string[] log = line.Split('|');
+
+                        if (log.Count() != 5)
+                        {
+                            throw new ArgumentException("Invalid download file format.");
+                        }
+
                         string[] request = log[3].Replace("\"", "").Split(' ');
+
+                        if (request.Count() != 3)
+                        {
+                            throw new ArgumentException("Invalid download file format.");
+                        }
 
                         logLines.Add(
                             new AgoraLogLine(

@@ -13,6 +13,9 @@ namespace AgileContentChallenge.NewCDNiTaas
         public int ResponseSize { get; protected set; }
         public string CacheStatus { get; protected set; }
 
+        public AgoraLogLine()
+        { }
+
         public AgoraLogLine(HttpMethod httpMethod, HttpStatusCode statusCode, string uriPath,
             int timeTaken, int responseSize, string cacheStatus)
         {
