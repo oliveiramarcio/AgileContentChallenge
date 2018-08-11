@@ -72,7 +72,7 @@ namespace AgileContentChallenge.NewCDNiTaas
 
                     AgoraLog agoraLog = new AgoraLog(logLines);
 
-                    StreamWriter file = new StreamWriter(outputFile, true, Encoding.UTF8);
+                    StreamWriter file = new StreamWriter(outputFile, false, Encoding.UTF8);
                     file.WriteLine(agoraLog.ToString());
                     file.Flush();
                     file.Close();
